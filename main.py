@@ -5,16 +5,17 @@ from tests import studentTests, disciplineTests
 from repo import *
 from entities import *
 
-studentTest = studentTests()
-studentTest.runAllTests()
-disciplineTest = disciplineTests()
-disciplineTest.runAllTests()
+
 serviceStudentValidator = studentValidator()
 serviceDisciplineValidator = disciplineValidator()
 serviceGradeValidator = gradeValidator()
 studentsRepo = Repo()
 disciplinesRepo = Repo()
 gradesRepo = Repo()
+studentTest = studentTests(studentsRepo)
+studentTest.runAllTests()
+disciplineTest = disciplineTests(disciplinesRepo)
+disciplineTest.runAllTests()
 studentsService = serviceStudents(studentsRepo, serviceStudentValidator, gradesRepo)
 disciplinesService = serviceDisciplines(disciplinesRepo, serviceDisciplineValidator, gradesRepo)
 gradesService = serviceGrades(studentsRepo, disciplinesRepo, gradesRepo, gradeValidator)

@@ -4,8 +4,8 @@ from repo import *
 
 
 class studentTests():
-    def __init__(self):
-        pass
+    def __init__(self, repoStudents):
+        self.__repo = repoStudents
 
     @staticmethod
     def __test_studentName_expectedName():
@@ -57,14 +57,13 @@ class studentTests():
         self.__test_studentID_expectedID()
         self.__test_studentName_expectedName()
         self.__test_addStudent_correctAdd()
-        self.__test_addStudent_duplicateID_RepoError()
         self.__test_updateStudent_correctUpdate()
         self.__test_removeStudent_correctRemoval()
 
 
 class disciplineTests():
-    def __init__(self):
-        pass
+    def __init__(self, repoDisciplines):
+        self.__repo = repoDisciplines
 
     @staticmethod
     def __test_disciplineID_expectedID():
@@ -116,7 +115,6 @@ class disciplineTests():
         self.__test_disciplineID_expectedID()
         self.__test_disciplineName_expectedName()
         self.__test_addDiscipline_correctAdd()
-        self.__test_addDiscipline_duplicateID_RepoError()
         self.__test_updateDiscipline_correctUpdate()
         self.__test_removeDiscipline_correctRemoval()
 
@@ -144,3 +142,4 @@ class gradeTests():
         self.__test_gradeDisciplineID_expectedID()
         self.__test_gradeStudentID_expectedID()
         self.__test_gradeValue_expectedValue()
+
