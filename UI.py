@@ -8,6 +8,14 @@ TODO : CREATE EXCEPTIONS FOR NON - NUMERICAL DATA TYPES PASSED AS INPUT BY USER
 TODO (*OPTIONAL) : STRUCTURE COMMANDS AND OPTIONS IN TREE MODE WITH RETURN
 '''
 
+
+def numericalTypeCheck(inputNumber):
+    try:
+        inputNumber = int(inputNumber)
+    except ValueError:
+        raise UIError("Please insert a numerical value")
+
+
 class Console(object):
     def __init__(self, serviceStudents, serviceDisciplines, serviceGrades):
         self.__serviceStudents = serviceStudents
@@ -17,8 +25,12 @@ class Console(object):
     def __UIAddStudent(self, studentID, studentName):
         if studentID == "" or studentName == "":
             raise UIError("Please don't leave any fields empty")
-        studentID = int(studentID)
-        self.__serviceStudents.addStudent(studentID, studentName)
+        try:
+            numericalTypeCheck(studentID)
+            studentID = int(studentID)
+            self.__serviceStudents.addStudent(studentID, studentName)
+        except UIError as error:
+            print(str(error))
 
     @staticmethod
     def printMenu():
@@ -29,14 +41,22 @@ class Console(object):
     def __UIUpdateStudent(self, studentID, studentNewName):
         if studentID == "" or studentNewName == "":
             raise UIError("Please don't leave any fields empty")
-        studentID = int(studentID)
-        self.__serviceStudents.updateStudent(studentID, studentNewName)
+        try:
+            numericalTypeCheck(studentID)
+            studentID = int(studentID)
+            self.__serviceStudents.updateStudent(studentID, studentNewName)
+        except UIError as error:
+            print(str(error))
 
     def __UIRemoveStudent(self, studentID):
         if studentID == "":
             raise UIError("Please don't leave the ID empty")
-        studentID = int(studentID)
-        self.__serviceStudents.removeStudent(studentID)
+        try:
+            numericalTypeCheck(studentID)
+            studentID = int(studentID)
+            self.__serviceStudents.removeStudent(studentID)
+        except UIError as error:
+            print(str(error))
 
     def __UIListStudents(self):
         students = self.__serviceStudents.getStudents()
@@ -46,8 +66,12 @@ class Console(object):
     def __UISearchStudentByID(self, studentID):
         if studentID == "":
             raise UIError("Please don't leave the ID empty")
-        studentID = int(studentID)
-        print(self.__serviceStudents.searchStudentByID(studentID))
+        try:
+            numericalTypeCheck(studentID)
+            studentID = int(studentID)
+            print(self.__serviceStudents.searchStudentByID(studentID))
+        except UIError as error:
+            print(str(error))
 
     def __UISearchStudentsByName(self, searchStudentName):
         if searchStudentName == "":
@@ -59,20 +83,32 @@ class Console(object):
     def __UIAddDiscipline(self, disciplineID, disciplineName):
         if disciplineID == "" or disciplineName == "":
             raise UIError("Please don't leave any fields empty")
-        disciplineID = int(disciplineID)
-        self.__serviceDisciplines.addDiscipline(disciplineID, disciplineName)
+        try:
+            numericalTypeCheck(disciplineID)
+            disciplineID = int(disciplineID)
+            self.__serviceDisciplines.addDiscipline(disciplineID, disciplineName)
+        except UIError as error:
+            print(str(error))
 
     def __UIUpdateDiscipline(self, disciplineID, disciplineNewName):
         if disciplineID == "" or disciplineNewName == "":
             raise UIError("Please don't leave any fields empty")
-        disciplineID = int(disciplineID)
-        self.__serviceDisciplines.updateDiscipline(disciplineID, disciplineNewName)
+        try:
+            numericalTypeCheck(disciplineID)
+            disciplineID = int(disciplineID)
+            self.__serviceDisciplines.updateDiscipline(disciplineID, disciplineNewName)
+        except UIError as error:
+            print(str(error))
 
     def __UIRemoveDiscipline(self, disciplineID):
         if disciplineID == "":
             raise UIError("Please don't leave the ID empty")
-        disciplineID = int(disciplineID)
-        self.__serviceDisciplines.removeDiscipline(disciplineID)
+        try:
+            numericalTypeCheck(disciplineID)
+            disciplineID = int(disciplineID)
+            self.__serviceDisciplines.removeDiscipline(disciplineID)
+        except UIError as error:
+            print(str(error))
 
     def __UIListDisciplines(self):
         disciplines = self.__serviceDisciplines.getDisciplines()
@@ -82,10 +118,16 @@ class Console(object):
     def __UIAddGrade(self, studentID, disciplineID, gradeValue):
         if studentID == "" or disciplineID == "" or gradeValue == "":
             raise UIError("Please don't leave any fields empty")
-        studentID = int(studentID)
-        disciplineID = int(disciplineID)
-        gradeValue = int(gradeValue)
-        self.__serviceGrades.addGrade(studentID, disciplineID, gradeValue)
+        try:
+            numericalTypeCheck(studentID)
+            studentID = int(studentID)
+            numericalTypeCheck(disciplineID)
+            disciplineID = int(disciplineID)
+            numericalTypeCheck(gradeValue)
+            gradeValue = int(gradeValue)
+            self.__serviceGrades.addGrade(studentID, disciplineID, gradeValue)
+        except UIError as error:
+            print(str(error))
 
     def __UIListGrades(self):
         grades = self.__serviceGrades.getGrades()

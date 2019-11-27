@@ -3,7 +3,8 @@ from exceptions import ValidError
 
 class studentValidator(object):
 
-    def validateStudent(self, student):
+    @staticmethod
+    def validateStudent(student):
         errors = ""
         if student.getID() < 0:
             errors += "Student ID cannot be negative\n"
@@ -15,7 +16,8 @@ class studentValidator(object):
 
 class disciplineValidator(object):
 
-    def validateDiscipline(self, discipline):
+    @staticmethod
+    def validateDiscipline(discipline):
         errors = ""
         if discipline.getID() < 0:
             errors += "Discipline ID cannot be negative\n"
