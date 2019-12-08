@@ -1,30 +1,27 @@
 from entities import *
 from service import *
 from repo import *
+import unittest
+import coverage
 
+class studentTests(unittest.TestCase):
 
-class studentTests():
-    def __init__(self, repoStudents):
-        self.__repo = repoStudents
-
-    @staticmethod
-    def __test_studentName_expectedName():
+    def test_studentName_expectedName(self):
         student = Student(1, "Tudor")
-        assert student.getName() == "Tudor"
+        self.assertTrue(student.getName() == "Tudor")
 
-    @staticmethod
-    def __test_studentID_expectedID():
+    def test_studentID_expectedID(self):
         student = Student(1, "Tudor")
-        assert student.getID() == 1
+        self.assertTrue(student.getID() == 1)
 
-    def __test_addStudent_correctAdd(self):
+    def test_addStudent_correctAdd(self):
         self.__repo = Repo()
         assert len(self.__repo.getAllObjects()) == 0
         student = Student(1, "Tudor")
         self.__repo.addUniqueObject(student)
         assert len(self.__repo.getAllObjects()) == 1
 
-    def __test_addStudent_duplicateID_RepoError(self):
+    def testAddUniqueObject(self):
         self.__repo = Repo()
         assert len(self.__repo.getAllObjects()) == 0
         student = Student(1, "Tudor")
@@ -37,7 +34,7 @@ class studentTests():
             print(str(error))
         assert len(self.__repo.getAllObjects()) == 1
 
-    def __test_updateStudent_correctUpdate(self):
+    def test_updateStudent_correctUpdate(self):
         self.__repo = Repo()
         student = Student(1, "Tudor")
         self.__repo.addUniqueObject(student)
@@ -46,36 +43,25 @@ class studentTests():
         students = self.__repo.getAllObjects()
         assert students[0].getName() == "Tudorr"
 
-    def __test_removeStudent_correctRemoval(self):
+    def test_removeStudent_correctRemoval(self):
         self.__repo = Repo()
         student = Student(1, "Tudor")
         self.__repo.addUniqueObject(student)
         self.__repo.removeObject(student.getID())
         assert len(self.__repo.getAllObjects()) == 0
 
-    def runAllTests(self):
-        self.__test_studentID_expectedID()
-        self.__test_studentName_expectedName()
-        self.__test_addStudent_correctAdd()
-        self.__test_updateStudent_correctUpdate()
-        self.__test_removeStudent_correctRemoval()
 
+class disciplineTests(unittest.TestCase):
 
-class disciplineTests():
-    def __init__(self, repoDisciplines):
-        self.__repo = repoDisciplines
-
-    @staticmethod
-    def __test_disciplineID_expectedID():
+    def test_disciplineID_expectedID(self):
         discipline = Discipline(1, "Biology")
-        assert discipline.getID() == 1
+        self.assertTrue(discipline.getID() == 1)
 
-    @staticmethod
-    def __test_disciplineName_expectedName():
+    def test_disciplineName_expectedName(self):
         discipline = Discipline(1, "Biology")
-        assert discipline.getName() == "Biology"
+        self.assertTrue(discipline.getName() == "Biology")
 
-    def __test_addDiscipline_duplicateID_RepoError(self):
+    def test_addDiscipline_duplicateID_RepoError(self):
         self.__repo = Repo()
         assert len(self.__repo.getAllObjects()) == 0
         discipline = Discipline(1, "Biology")
@@ -88,14 +74,14 @@ class disciplineTests():
             print(str(error))
         assert len(self.__repo.getAllObjects()) == 1
 
-    def __test_addDiscipline_correctAdd(self):
+    def test_addDiscipline_correctAdd(self):
         self.__repo = Repo()
         assert len(self.__repo.getAllObjects()) == 0
         discipline = Discipline(1, "Tudor")
         self.__repo.addUniqueObject(discipline)
         assert len(self.__repo.getAllObjects()) == 1
 
-    def __test_updateDiscipline_correctUpdate(self):
+    def test_updateDiscipline_correctUpdate(self):
         self.__repo = Repo()
         discipline = Discipline(1, "Biology")
         self.__repo.addUniqueObject(discipline)
@@ -104,42 +90,28 @@ class disciplineTests():
         students = self.__repo.getAllObjects()
         assert students[0].getName() == "Biologyy"
 
-    def __test_removeDiscipline_correctRemoval(self):
+    def test_removeDiscipline_correctRemoval(self):
         self.__repo = Repo()
         discipline = Discipline(1, "Biology")
         self.__repo.addUniqueObject(discipline)
         self.__repo.removeObject(discipline.getID())
         assert len(self.__repo.getAllObjects()) == 0
 
-    def runAllTests(self):
-        self.__test_disciplineID_expectedID()
-        self.__test_disciplineName_expectedName()
-        self.__test_addDiscipline_correctAdd()
-        self.__test_updateDiscipline_correctUpdate()
-        self.__test_removeDiscipline_correctRemoval()
 
+class gradeTests(unittest.TestCase):
 
-class gradeTests():
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def __test_gradeStudentID_expectedID():
+    def test_gradeStudentID_expectedID(self):
         grade = Grade(1, 1, 10)
-        assert grade.getStudentID() == 1
+        self.assertTrue(grade.getStudentID() == 1)
 
-    @staticmethod
-    def __test_gradeDisciplineID_expectedID():
+    def test_gradeDisciplineID_expectedID(self):
         grade = Grade(1, 2, 10)
-        assert grade.getDisciplineID() == 1
+        self.assertTrue(grade.getDisciplineID() == 2)
 
-    @staticmethod
-    def __test_gradeValue_expectedValue():
+    def test_gradeValue_expectedValue(self):
         grade = Grade(1, 1, 10)
-        assert grade.getGrade() == 10
+        self.assertTrue(grade.getGrade() == 10)
 
-    def runAllTests(self):
-        self.__test_gradeDisciplineID_expectedID()
-        self.__test_gradeStudentID_expectedID()
-        self.__test_gradeValue_expectedValue()
 
+if __name__ == "__main__":
+    unittest.main()

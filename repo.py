@@ -59,3 +59,6 @@ class Repo(object):
 
     def getAllObjects(self):
         return self.__objects[:]
+
+    def clearList(self):
+        self.__objects.clear()

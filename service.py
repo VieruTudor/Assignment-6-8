@@ -1,4 +1,6 @@
 from entities import *
+from statistics import mean
+import random
 
 
 class serviceStudents(object):
@@ -6,6 +8,23 @@ class serviceStudents(object):
         self.__repoStudents = repoStudents
         self.__validStudent = validStudent
         self.__repoGrades = repoGrades
+
+    def generateStudents(self):
+        self.__repoStudents.clearList()
+        nameChoiceList = ["John",
+                          "Alice",
+                          "Richard",
+                          "Max",
+                          "Chris",
+                          "Robert",
+                          "Megan",
+                          "Liz",
+                          "Mary",
+                          "Harry"]
+        for idChoice in range(10):
+            student = Student(idChoice + 1, random.choice(nameChoiceList))
+            self.__validStudent.validateStudent(student)
+            self.__repoStudents.addUniqueObject(student)
 
     def getStudents(self):
         return self.__repoStudents.getAllObjects()
@@ -37,7 +56,23 @@ class serviceDisciplines(object):
         self.__validDiscipline = validDiscipline
         self.__repoGrades = repoGrades
 
+    def generateDisciplines(self):
+        randomDisciplines = ["Computer Science", "Algebra", "Robotics"]
+        for idChoice in range(3):
+            disciplineName = random.choice(randomDisciplines)
+            discipline = Discipline(idChoice + 1, disciplineName)
+            self.__validDiscipline.validateDiscipline(discipline)
+            self.__repoDisciplines.addUniqueObject(discipline)
+            randomDisciplines.remove(disciplineName)
+
+    def searchDisciplineByID(self, disciplineID):
+        return self.__repoDisciplines.searchEntityByID(disciplineID)
+
+    def searchDisciplinesByName(self, disciplineName):
+        return self.__repoDisciplines.searchEntityByName(disciplineName)
+
     def addDiscipline(self, disciplineID, disciplineName):
+        self.__repoDisciplines.clearList()
         discipline = Discipline(disciplineID, disciplineName)
         self.__validDiscipline.validateDiscipline(discipline)
         self.__repoDisciplines.addUniqueObject(discipline)
@@ -62,6 +97,22 @@ class serviceGrades(object):
         self.__repoGrades = repoGrades
         self.__validGrade = validGrade
 
+    def generateGrades(self):
+        students = self.__repoStudents.getAllObjects()
+        disciplines = self.__repoDisciplines.getAllObjects()
+        for grades in range(10):
+            randomStudentID = random.choice(students).getID()
+            randomDisciplineID = random.choice(disciplines).getID()
+            randomGradeValue = random.randint(1, 10)
+            grade = Grade(randomStudentID, randomDisciplineID, randomGradeValue)
+            self.__validGrade.validateGrade(grade)
+            self.__repoGrades.addObject(grade)
+
+    def addGrade(self, studentID, disciplineID, gradeValue):
+        grade = Grade(studentID, disciplineID, gradeValue)
+        self.__validGrade.validateGrade(grade)
+        self.__repoGrades.addObject(grade)
+
     def removeGradesByStudentID(self, studentID):
         self.__repoGrades.removeGradeByStudentID(studentID)
 
@@ -71,7 +122,23 @@ class serviceGrades(object):
     def getGrades(self):
         return self.__repoGrades.getAllObjects()
 
-    def addGrade(self, studentID, disciplineID, gradeValue):
-        grade = Grade(studentID, disciplineID, gradeValue)
-        self.__validGrade.validateGrade(grade)
-        self.__repoGrades.addObject(grade)
+    '''
+    grades = [(1, 1, 10), (2, 1, 10), (1, 2, 8), (1, 2, 7), (2, 2, 10), (2, 2, 9)]
+    studentGrades = [[(1, 1, 10), (1, 2, 8), (1, 2, 7)], [(2, 1, 10), (2, 2, 10), (2, 2, 9)]]
+    '''
+
+    def studentsFailing(self):
+        studentsFailing = []
+        for student in self.__repoStudents.getAllObjects():
+            for discipline in self.__repoDisciplines.getAllObjects():
+                numberOfGrades = 0
+                gradesSum = 0
+                for grade in self.__repoGrades.getAllObjects():
+                    if grade.getStudentID() == student.getID() and grade.getDisciplineID() == discipline.getID():
+                        gradesSum += grade.getGrade()
+                        numberOfGrades += 1
+                if numberOfGrades > 0:
+                    average = gradesSum / numberOfGrades
+                    if average < 5:
+                        studentsFailing.append([student.getID(), discipline.getName(), average])
+        return studentsFailing

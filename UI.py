@@ -1,15 +1,5 @@
 from exceptions import *
 
-'''
-TODO : REWRITE UI LOOP SO BE SMALLER
-       MOVE FUNCTION TRY / EXCEPT CALLS INTO FUNCTION BLOCK
-       THEN JUST CALL IT
-TODO : CREATE EXCEPTIONS FOR NON - NUMERICAL DATA TYPES PASSED AS INPUT BY USER --DONE--
-TODO : PY UNIT TESTS + COVERAGE ( > 95% )
-TODO (*OPTIONAL) : STRUCTURE COMMANDS AND OPTIONS IN TREE MODE WITH RETURN
-'''
-
-
 def numericalTypeCheck(inputNumber):
     try:
         inputNumber = int(inputNumber)
@@ -23,6 +13,20 @@ class Console(object):
         self.__serviceDisciplines = serviceDisciplines
         self.__serviceGrades = serviceGrades
 
+    # Randomly generates entries for students, disciplines and grades
+    def __initLists(self):
+        self.__serviceStudents.generateStudents()
+        self.__serviceDisciplines.generateDisciplines()
+        self.__serviceGrades.generateGrades()
+
+    @staticmethod
+    def __printMenu():
+        print("1. Student commands\n"
+              "2. Discipline commands\n"
+              "3. Grade commands\n"
+              "4. Exit program")
+
+    # region STUDENT METHODS
     def __UIAddStudent(self, studentID, studentName):
         if studentID == "" or studentName == "":
             raise UIError("Please don't leave any fields empty")
@@ -32,12 +36,6 @@ class Console(object):
             self.__serviceStudents.addStudent(studentID, studentName)
         except UIError as error:
             print(str(error))
-
-    @staticmethod
-    def printMenu():
-        print("1. Student commands\n"
-              "2. Discipline commands\n"
-              "3. Grade commands\n")
 
     def __UIUpdateStudent(self, studentID, studentNewName):
         if studentID == "" or studentNewName == "":
@@ -64,13 +62,13 @@ class Console(object):
         for student in students:
             print(student)
 
-    def __UISearchStudentByID(self, studentID):
-        if studentID == "":
+    def __UISearchStudentByID(self, searchStudentID):
+        if searchStudentID == "":
             raise UIError("Please don't leave the ID empty")
         try:
-            numericalTypeCheck(studentID)
-            studentID = int(studentID)
-            print(self.__serviceStudents.searchStudentByID(studentID))
+            numericalTypeCheck(searchStudentID)
+            searchStudentID = int(searchStudentID)
+            print(self.__serviceStudents.searchStudentByID(searchStudentID))
         except UIError as error:
             print(str(error))
 
@@ -81,6 +79,8 @@ class Console(object):
         for student in searchMatches:
             print(student)
 
+    # endregion
+    # region DISCIPLINE METHODS
     def __UIAddDiscipline(self, disciplineID, disciplineName):
         if disciplineID == "" or disciplineName == "":
             raise UIError("Please don't leave any fields empty")
@@ -116,6 +116,26 @@ class Console(object):
         for discipline in disciplines:
             print(discipline)
 
+    def __UISearchDisciplinesByName(self, searchDisciplineName):
+        if searchDisciplineName == "":
+            raise UIError("Please don't leave the name empty")
+        searchMatches = self.__serviceDisciplines.searchDisciplinesByName(searchDisciplineName)
+        for discipline in searchMatches:
+            print(discipline)
+
+    def __UISearchDisciplineByID(self, searchDisciplineID):
+        if searchDisciplineID == "":
+            raise UIError("Please don't leave the ID empty")
+        try:
+            numericalTypeCheck(searchDisciplineID)
+            searchDisciplineID = int(searchDisciplineID)
+            print(self.__serviceDisciplines.searchDisciplineByID(searchDisciplineID))
+        except UIError as error:
+            print(str(error))
+
+    # endregion
+
+    # region GRADE METHODS
     def __UIAddGrade(self, studentID, disciplineID, gradeValue):
         if studentID == "" or disciplineID == "" or gradeValue == "":
             raise UIError("Please don't leave any fields empty")
@@ -135,9 +155,15 @@ class Console(object):
         for grade in grades:
             print(grade)
 
+    def __UIFailingStudents(self):
+        failingStudents = self.__serviceGrades.studentsFailing()
+        print(failingStudents)
+
+    # endregion
     def run(self):
+        self.__initLists()
         while True:
-            self.printMenu()
+            self.__printMenu()
             command = input(">>>")
             command.strip()
             if command == "1":
@@ -146,7 +172,8 @@ class Console(object):
                       "3. Remove student.\n"
                       "4. List students.\n"
                       "5. Search student by ID.\n"
-                      "6. Search student(s) by name.\n")
+                      "6. Search student(s) by name.\n"
+                      "7. Exit program.")
                 option = input(">>>")
                 if option == "1":
                     try:
@@ -196,12 +223,16 @@ class Console(object):
                         print(str(error))
                     except UIError as error:
                         print(str(error))
-                    # TODO IMPLEMENT UI ERROR FOR FURTHER EXCEPTION THROWS
+                if option == "7":
+                    return
             if command == "2":
                 print("1. Add discipline.\n"
                       "2. Update discipline.\n"
                       "3. Remove discipline.\n"
-                      "4. List disciplines.\n")
+                      "4. List disciplines.\n"
+                      "5. Search discipline by ID.\n"
+                      "6. Search discipline(s) by name.\n"
+                      "7. Exit program.")
                 option = input(">>>")
                 if option == "1":
                     try:
@@ -235,9 +266,25 @@ class Console(object):
                         print(str(error))
                 if option == "4":
                     self.__UIListDisciplines()
+                if option == "5":
+                    try:
+                        disciplineID = input("Search by discipline ID : ")
+                        self.__UISearchDisciplineByID(disciplineID)
+                    except RepoError as error:
+                        print(str(error))
+                if option == "6":
+                    try:
+                        disciplineName = input("Search discipline by name : ")
+                        self.__UISearchDisciplinesByName(disciplineName)
+                    except RepoError as error:
+                        print(str(error))
+                if option == "7":
+                    return
             if command == "3":
                 print("1. Grade a student.\n"
-                      "2. View all grades.\n")
+                      "2. View all grades.\n"
+                      "3. Failing students.\n"
+                      "5. Exit program. \n")
                 option = input(">>>")
                 if option == "1":
                     studentID = input("Insert student's ID : ")
@@ -246,3 +293,9 @@ class Console(object):
                     self.__UIAddGrade(studentID, disciplineID, gradeValue)
                 if option == "2":
                     self.__UIListGrades()
+                if option == "3":
+                    self.__UIFailingStudents()
+                if option == "5":
+                    return
+            if command == "4":
+                return
