@@ -142,3 +142,41 @@ class serviceGrades(object):
                     if average < 5:
                         studentsFailing.append([student.getID(), discipline.getName(), average])
         return studentsFailing
+
+    def studentsSituation(self):
+        studentsRankings = []
+        for student in self.__repoStudents.getAllObjects():
+            studentAverage = 0
+            studentNumberOfDisciplines = 0
+            for discipline in self.__repoDisciplines.getAllObjects():
+                numberOfGrades = 0
+                gradesSum = 0
+                for grade in self.__repoGrades.getAllObjects():
+                    if grade.getStudentID() == student.getID() and grade.getDisciplineID() == discipline.getID():
+                        gradesSum += grade.getGrade()
+                        numberOfGrades += 1
+                if numberOfGrades > 0:
+                    studentNumberOfDisciplines += 1
+                    average = gradesSum / numberOfGrades
+                    studentAverage += average
+            if studentNumberOfDisciplines > 0:
+                studentAverage /= studentNumberOfDisciplines
+                studentsRankings.append([student.getID(), studentAverage])
+        studentsRankings.sort(key=lambda finalGrade: finalGrade[1], reverse=True)
+        return studentsRankings
+
+    def disciplinesRankings(self):
+        disciplinesRankings = []
+        for discipline in self.__repoDisciplines.getAllObjects():
+            disciplineGradesSum = 0
+            disciplineNumberOfGrades = 0
+            for grade in self.__repoGrades.getAllObjects():
+                if grade.getDisciplineID() == discipline.getID():
+                    disciplineGradesSum += grade.getGrade()
+                    disciplineNumberOfGrades += 1
+            if disciplineNumberOfGrades > 0:
+                disciplineAverage = disciplineGradesSum / disciplineNumberOfGrades
+                disciplinesRankings.append([discipline.getName(), disciplineAverage])
+        disciplinesRankings.sort(key=lambda disciplineFinalGrade: disciplineFinalGrade[1], reverse=True)
+        return disciplinesRankings
+

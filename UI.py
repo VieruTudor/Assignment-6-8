@@ -1,5 +1,6 @@
 from exceptions import *
 
+
 def numericalTypeCheck(inputNumber):
     try:
         inputNumber = int(inputNumber)
@@ -159,6 +160,14 @@ class Console(object):
         failingStudents = self.__serviceGrades.studentsFailing()
         print(failingStudents)
 
+    def __UIStudentsRankings(self):
+        studentsRankings = self.__serviceGrades.studentsSituation()
+        print(studentsRankings)
+
+    def __UIDisciplinesRankings(self):
+        disciplinesRankings = self.__serviceGrades.disciplinesRankings()
+        print(disciplinesRankings)
+
     # endregion
     def run(self):
         self.__initLists()
@@ -284,7 +293,9 @@ class Console(object):
                 print("1. Grade a student.\n"
                       "2. View all grades.\n"
                       "3. Failing students.\n"
-                      "5. Exit program. \n")
+                      "4. Students rankings.\n"
+                      "5. Disciplines rankings.\n"
+                      "6. Exit program. \n")
                 option = input(">>>")
                 if option == "1":
                     studentID = input("Insert student's ID : ")
@@ -295,7 +306,11 @@ class Console(object):
                     self.__UIListGrades()
                 if option == "3":
                     self.__UIFailingStudents()
+                if option == "4":
+                    self.__UIStudentsRankings()
                 if option == "5":
+                    self.__UIDisciplinesRankings()
+                if option == "6":
                     return
             if command == "4":
                 return
