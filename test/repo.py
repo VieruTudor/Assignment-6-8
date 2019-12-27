@@ -4,11 +4,9 @@ from exceptions import RepoError
 class Repo(object):
     def __init__(self):
         self.__objects = []
-        self.__deletedObjects = []
 
     # Adds a unique entity passed by the service to the list
     # By unique, we mean that the entity has a unique ID that cannot be duplicate in the list
-
     def addUniqueObject(self, entity):
         if entity in self.__objects:
             raise RepoError("Entity already in list")
@@ -43,7 +41,6 @@ class Repo(object):
                 found = True
         if not found:
             raise RepoError("Entity not in list")
-        self.__deletedObjects[:] = [entity for entity in self.__objects if entity.getStudentID() == entityID]
         self.__objects[:] = [entity for entity in self.__objects if entity.getStudentID() != entityID]
 
     # Removes grades associated to a discipline ID
@@ -54,7 +51,6 @@ class Repo(object):
                 found = True
         if not found:
             raise RepoError("Entity not in list")
-        self.__deletedObjects[:] = [entity for entity in self.__objects if entity.getDisciplineID() == entityID]
         self.__objects[:] = [entity for entity in self.__objects if entity.getDisciplineID() != entityID]
 
     # Searches an entity based on its ID
@@ -74,9 +70,6 @@ class Repo(object):
     # Returns a list containing all the objects in the repo
     def getAllObjects(self):
         return self.__objects[:]
-
-    def getDeletedObjects(self):
-        return self.__deletedObjects[:]
 
     # Wipes the entire list in the current repo
     def clearList(self):

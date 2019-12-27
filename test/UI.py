@@ -11,11 +11,10 @@ def numericalTypeCheck(inputNumber):
 
 # Class managing the UI of the program
 class Console(object):
-    def __init__(self, serviceStudents, serviceDisciplines, serviceGrades, serviceUndo):
+    def __init__(self, serviceStudents, serviceDisciplines, serviceGrades):
         self.__serviceStudents = serviceStudents
         self.__serviceDisciplines = serviceDisciplines
         self.__serviceGrades = serviceGrades
-        self.__serviceUndo = serviceUndo
 
     # Randomly generates entries for students, disciplines and grades
     def __initLists(self):
@@ -29,21 +28,7 @@ class Console(object):
         print("1. Student commands\n"
               "2. Discipline commands\n"
               "3. Grade commands\n"
-              "4. Undo last action\n"
-              "5. Redo last action\n"
-              "6. Exit program")
-
-    def userInterface_undo(self):
-        try:
-            self.__serviceUndo.undoFunction()
-        except Exception as ex:
-            print(ex)
-
-    def userInterface_redo(self):
-        try:
-            self.__serviceUndo.redoFunction()
-        except Exception as ex:
-            print(ex)
+              "4. Exit program")
 
     # region STUDENT METHODS
     # Takes the parameters given by the user, checks for empty input and numerical types and passes them to service
@@ -356,8 +341,4 @@ class Console(object):
                 if option == "6":
                     return
             if command == "4":
-                self.userInterface_undo()
-            if command == "5":
-                self.userInterface_redo()
-            if command == "6":
                 return

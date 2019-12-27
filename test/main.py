@@ -4,18 +4,16 @@ from validators import studentValidator, disciplineValidator, gradeValidator
 from tests import studentTests, disciplineTests
 from repo import *
 from entities import *
-from undoRepo import *
 
 
-undo = Undo()
 serviceStudentValidator = studentValidator()
 serviceDisciplineValidator = disciplineValidator()
 serviceGradeValidator = gradeValidator()
 studentsRepo = Repo()
 disciplinesRepo = Repo()
 gradesRepo = Repo()
-studentsService = serviceStudents(undo, studentsRepo, serviceStudentValidator, gradesRepo)
-disciplinesService = serviceDisciplines(undo, disciplinesRepo, serviceDisciplineValidator, gradesRepo)
-gradesService = serviceGrades(undo, studentsRepo, disciplinesRepo, gradesRepo, gradeValidator)
-UIConsole = Console(studentsService, disciplinesService, gradesService, undo)
+studentsService = serviceStudents(studentsRepo, serviceStudentValidator, gradesRepo)
+disciplinesService = serviceDisciplines(disciplinesRepo, serviceDisciplineValidator, gradesRepo)
+gradesService = serviceGrades(studentsRepo, disciplinesRepo, gradesRepo, gradeValidator)
+UIConsole = Console(studentsService, disciplinesService, gradesService)
 UIConsole.run()

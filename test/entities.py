@@ -16,7 +16,7 @@ class Student(object):
         return self.getID() == other.getID()
 
     def __str__(self):
-        return "ID : " + str(self.__ID) + ", " + str(self.__name)
+        return "ID : " + str(self.__ID) + ", " + self.__name
 
 
 class Discipline(object):
@@ -37,7 +37,7 @@ class Discipline(object):
         return self.getID() == other.getID()
 
     def __str__(self):
-        return "ID : " + str(self.__ID) + ", " + str(self.__name)
+        return "ID : " + str(self.__ID) + ", " + self.__name
 
 
 class Grade(object):
