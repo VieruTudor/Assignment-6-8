@@ -54,3 +54,16 @@ class Undo(object):
         self._history[self._historyIndex].redo()
         self._historyIndex += 1
         self._isUndo = False
+
+
+class MultipleOperation(object):
+    def __init__(self, *operations):
+        self._operationList = operations
+
+    def undo(self):
+        for operation in self._operationList:
+            operation.undo()
+
+    def redo(self):
+        for operation in self._operationList:
+            operation.redo()
