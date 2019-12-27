@@ -4,10 +4,10 @@ from undoRepo import *
 
 
 class serviceStudents(object):
-    def __init__(self, undo, repoStudents, validStudent, repoGrades):
+    def __init__(self, undo, repoStudents, validStudent, gradesService):
         self.__repoStudents = repoStudents
         self.__validStudent = validStudent
-        self.__repoGrades = repoGrades
+        self.__gradesService = gradesService
         self.__undo = undo
 
     # Function that randomly generates 10 students from a certain list of names
@@ -70,7 +70,7 @@ class serviceStudents(object):
     def removeStudent(self, studentID, recordUndo=True):
         deletedStudent = self.searchStudentByID(studentID)
         self.__repoStudents.removeObject(studentID)
-        self.__repoGrades.removeGradeByStudentID(studentID)
+        self.__gradesService.removeGradesByStudentID(studentID)
         if recordUndo:
             undo = FunctionCall(self.addStudent, deletedStudent.getID(), deletedStudent.getName())
             redo = FunctionCall(self.removeStudent, studentID)
@@ -79,10 +79,10 @@ class serviceStudents(object):
 
 
 class serviceDisciplines(object):
-    def __init__(self, undo, repoDisciplines, validDiscipline, repoGrades):
+    def __init__(self, undo, repoDisciplines, validDiscipline, gradesService):
         self.__repoDisciplines = repoDisciplines
         self.__validDiscipline = validDiscipline
-        self.__repoGrades = repoGrades
+        self.__gradesService = gradesService
         self.__undo = undo
 
     # Randomly generates 3 disciplines from a certain list of names
@@ -133,7 +133,7 @@ class serviceDisciplines(object):
     def removeDiscipline(self, disciplineID, recordUndo=True):
         deletedDiscipline = self.searchDisciplineByID(disciplineID)
         self.__repoDisciplines.removeObject(disciplineID)
-        self.__repoGrades.removeGradeByDisciplineID(disciplineID)
+        self.__gradesService.removeGradesByDisciplineID(disciplineID)
         if recordUndo:
             undo = FunctionCall(self.addDiscipline, deletedDiscipline.getID(), deletedDiscipline.getName())
             redo = FunctionCall(self.removeDiscipline, disciplineID)
@@ -179,22 +179,23 @@ class serviceGrades(object):
     # Function that is called in the students service upon the removal of a student. With the removal of a student, his
     # grades must be removed as well. Removes all the grades associated to a student ID
     def removeGradesByStudentID(self, studentID, recordUndo=True):
+        print(self.__repoGrades.getDeletedObjects())
         self.__repoGrades.removeGradeByStudentID(studentID)
         if recordUndo:
-            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects)
+            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects())
             redo = FunctionCall(self.removeGradesByStudentID, studentID)
             operation = Operation(undo, redo)
-            self.__undo(operation)
+            self.__undo.recordOperation(operation)
 
     # Function that is called in the disciplines service upon the removal of a discipline. With the removal of a
     # discipline, its grades must be removed as well. Removes all the grades associated to a discipline ID
     def removeGradesByDisciplineID(self, disciplineID, recordUndo=True):
         self.__repoGrades.removeGradeByDisciplineID(disciplineID)
         if recordUndo:
-            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects)
+            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects())
             redo = FunctionCall(self.removeGradesByDisciplineID, disciplineID)
             operation = Operation(undo, redo)
-            self.__undo(operation)
+            self.__undo.recordOperation(operation)
 
     # Calls the repo and gets all grades in the list
     def getGrades(self):

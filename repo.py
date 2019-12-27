@@ -43,9 +43,9 @@ class Repo(object):
                 found = True
         if not found:
             raise RepoError("Entity not in list")
-        self.__deletedObjects[:] = [entity for entity in self.__objects if entity.getStudentID() == entityID]
-        self.__objects[:] = [entity for entity in self.__objects if entity.getStudentID() != entityID]
-
+        self.__deletedObjects = [entity for entity in self.__objects if entity.getStudentID() == entityID]
+        self.__objects = [entity for entity in self.__objects if entity.getStudentID() != entityID]
+        # deletedObjects = self.objects - self.objects[:]
     # Removes grades associated to a discipline ID
     def removeGradeByDisciplineID(self, entityID):
         found = False
@@ -54,8 +54,8 @@ class Repo(object):
                 found = True
         if not found:
             raise RepoError("Entity not in list")
-        self.__deletedObjects[:] = [entity for entity in self.__objects if entity.getDisciplineID() == entityID]
-        self.__objects[:] = [entity for entity in self.__objects if entity.getDisciplineID() != entityID]
+        self.__deletedObjects = [entity for entity in self.__objects if entity.getDisciplineID() == entityID]
+        self.__objects = [entity for entity in self.__objects if entity.getDisciplineID() != entityID]
 
     # Searches an entity based on its ID
     def searchEntityByID(self, entityID):
