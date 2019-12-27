@@ -180,21 +180,21 @@ class serviceGrades(object):
     # grades must be removed as well. Removes all the grades associated to a student ID
     def removeGradesByStudentID(self, studentID, recordUndo=True):
         self.__repoGrades.removeGradeByStudentID(studentID)
-
         if recordUndo:
-            undo = FunctionCall(self.addGrades, self.__repoGrades. )
+            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects)
+            redo = FunctionCall(self.removeGradesByStudentID, studentID)
+            operation = Operation(undo, redo)
+            self.__undo(operation)
 
     # Function that is called in the disciplines service upon the removal of a discipline. With the removal of a
     # discipline, its grades must be removed as well. Removes all the grades associated to a discipline ID
     def removeGradesByDisciplineID(self, disciplineID, recordUndo=True):
-        if recordUndo:
-            for deletedDiscipline in self.__repoGrades.getDeletedObjects():
-                redo = FunctionCall(self.removeGradesByDisciplineID, deletedDiscipline.getDisciplineID())
-                undo = FunctionCall(self.addGrade, deletedDiscipline.getStudentID, deletedDiscipline.getDisciplineID,
-                                    deletedDiscipline.gradeValue)
-                operation = Operation(undo, redo)
-                self.__undo.recordOperation(operation)
         self.__repoGrades.removeGradeByDisciplineID(disciplineID)
+        if recordUndo:
+            undo = FunctionCall(self.addGrades, self.__repoGrades.getDeletedObjects)
+            redo = FunctionCall(self.removeGradesByDisciplineID, disciplineID)
+            operation = Operation(undo, redo)
+            self.__undo(operation)
 
     # Calls the repo and gets all grades in the list
     def getGrades(self):
