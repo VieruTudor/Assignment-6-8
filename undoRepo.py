@@ -40,7 +40,7 @@ class Undo(object):
         self._historyIndex += 1
 
     def undoFunction(self):
-        if self._historyIndex < 0:
+        if self._historyIndex <= 0:
             raise IndexError("Cannot undo more")
         self._isUndo = True
         self._historyIndex -= 1
