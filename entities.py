@@ -18,6 +18,15 @@ class Student(object):
     def __str__(self):
         return "ID : " + str(self.__ID) + ", " + str(self.__name)
 
+    @staticmethod
+    def readFromFile(line):
+        attributes = line.split(",")
+        return Student(attributes[0].strip(), attributes[1].strip())
+
+    @staticmethod
+    def writeToFile(student):
+        return str(student.getID()) + "," + str(student.getName())
+
 
 class Discipline(object):
     def __init__(self, disciplineID, disciplineName):
@@ -39,6 +48,15 @@ class Discipline(object):
     def __str__(self):
         return "ID : " + str(self.__ID) + ", " + str(self.__name)
 
+    @staticmethod
+    def readFromFile(line):
+        attributes = line.split(",")
+        return Discipline(attributes[0].strip(), attributes[1].strip())
+
+    @staticmethod
+    def writeToFile(discipline):
+        return str(discipline.getID()) + "," + str(discipline.getName())
+
 
 class Grade(object):
     def __init__(self, studentID, disciplineID, gradeValue):
@@ -56,5 +74,15 @@ class Grade(object):
         return self.__grade
 
     def __str__(self):
-        return "ID : " + str(self.__student) + ", " + "Discipline : " + str(self.__discipline) + ", " + "Grade : " + str(
+        return "ID : " + str(self.__student) + ", " + "Discipline : " + str(
+            self.__discipline) + ", " + "Grade : " + str(
             self.__grade)
+
+    @staticmethod
+    def readFromFile(line):
+        attributes = line.split(",")
+        return Grade(attributes[0], attributes[1], attributes[2])
+
+    @staticmethod
+    def writeToFile(grade):
+        return str(grade.getStudentID) + "," + str(grade.getDisciplineID) + "," + str(grade.getGrade)

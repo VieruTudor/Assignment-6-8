@@ -1,4 +1,5 @@
 from exceptions import RepoError
+import pickle
 
 
 class Repo(object):
@@ -46,6 +47,7 @@ class Repo(object):
         self.__deletedObjects = [entity for entity in self.__objects if entity.getStudentID() == entityID]
         self.__objects = [entity for entity in self.__objects if entity.getStudentID() != entityID]
         # deletedObjects = self.objects - self.objects[:]
+
     # Removes grades associated to a discipline ID
     def removeGradeByDisciplineID(self, entityID):
         found = False
@@ -81,3 +83,130 @@ class Repo(object):
     # Wipes the entire list in the current repo
     def clearList(self):
         self.__objects.clear()
+
+
+class FileRepo(Repo):
+    def __init__(self, file, objectReader, objectWriter):
+        Repo.__init__(self)
+        self.__file = file
+        self.__objectReader = objectReader
+        self.__objectWriter = objectWriter
+
+    def __readFromFile(self):
+        self.__entities = []
+        with open(self.__file, 'r') as fileReader:
+            lines = fileReader.readlines()
+            for line in lines:
+                line = line.strip()
+                if line != "":
+                    entity = self.__objectReader(line)
+                    self.__entities.append(entity)
+
+    def __writeToFile(self):
+        with open(self.__file, 'w') as fileWriter:
+            for entity in self.__entities:
+                fileWriter.write(self.__objectWriter(entity) + "\n")
+
+    def file_addObject(self, entity):
+        self.__readFromFile()
+        Repo.addObject(self, entity)
+        self.__writeToFile()
+
+    def file_addUniqueObject(self, entity, newEntity):
+        self.__readFromFile()
+        Repo.updateObject(self, entity, newEntity)
+        self.__writeToFile()
+
+    def file_removeObject(self, entityID):
+        self.__readFromFile()
+        Repo.removeObject(self, entityID)
+        self.__writeToFile()
+
+    def file_removeGradesByStudentID(self, studentID):
+        self.__readFromFile()
+        Repo.removeGradeByStudentID(self, studentID)
+        self.__writeToFile()
+
+    def file_removeGradesByDisciplineID(self, disciplineID):
+        self.__readFromFile()
+        Repo.removeGradeByDisciplineID(self, disciplineID)
+        self.__writeToFile()
+
+    def file_searchEntityByID(self, entityID):
+        self.__readFromFile()
+        return Repo.searchEntityByID(self, entityID)
+
+    def file_searchEntityByName(self, partialName):
+        self.__readFromFile()
+        return Repo.searchEntityByName(self, partialName)
+
+    def file_getAllObjects(self):
+        self.__readFromFile()
+        return Repo.getAllObjects(self)
+
+    def file_getDeletedObjects(self):
+        return Repo.getDeletedObjects(self)
+
+
+class BinaryRepo(Repo):
+    def __init__(self, file, objectReader, objectWriter):
+        Repo.__init__(self)
+        self.__file = file
+        self.__objectReader = objectReader
+        self.__objectWriter = objectWriter
+
+    def __readFromFile(self):
+        self.__entities = []
+        with open(self.__file, 'rb') as fileReader:
+            while True:
+                try:
+                    line = pickle.load(fileReader)
+                    entity = self.__objectReader(line)
+                    self.__entities.append(entity)
+                except EOFError:
+                    break
+
+    def __writeToFile(self):
+        with open(self.__file, 'wb') as fileWriter:
+            for entity in self.__entities:
+                pickle.dump(self.__objectWriter(entity), fileWriter)
+
+    def binary_addObject(self, entity):
+        self.__readFromFile()
+        Repo.addObject(self, entity)
+        self.__writeToFile()
+
+    def binary_addUniqueObject(self, entity, newEntity):
+        self.__readFromFile()
+        Repo.updateObject(self, entity, newEntity)
+        self.__writeToFile()
+
+    def binary_removeObject(self, entityID):
+        self.__readFromFile()
+        Repo.removeObject(self, entityID)
+        self.__writeToFile()
+
+    def binary_removeGradesByStudentID(self, studentID):
+        self.__readFromFile()
+        Repo.removeGradeByStudentID(self, studentID)
+        self.__writeToFile()
+
+    def binary_removeGradesByDisciplineID(self, disciplineID):
+        self.__readFromFile()
+        Repo.removeGradeByDisciplineID(self, disciplineID)
+        self.__writeToFile()
+
+    def binary_searchEntityByID(self, entityID):
+        self.__readFromFile()
+        return Repo.searchEntityByID(self, entityID)
+
+    def binary_searchEntityByName(self, partialName):
+        self.__readFromFile()
+        return Repo.searchEntityByName(self, partialName)
+
+    def binary_getAllObjects(self):
+        self.__readFromFile()
+        return Repo.getAllObjects(self)
+
+    def binary_getDeletedObjects(self):
+        return Repo.getDeletedObjects(self)

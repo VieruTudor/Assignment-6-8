@@ -18,7 +18,7 @@ class Console(object):
         self.__serviceUndo = serviceUndo
 
     # Randomly generates entries for students, disciplines and grades
-    def __initLists(self):
+    def initLists(self):
         self.__serviceStudents.generateStudents()
         self.__serviceDisciplines.generateDisciplines()
         self.__serviceGrades.generateGrades()
@@ -213,7 +213,6 @@ class Console(object):
     # endregion
 
     def run(self):
-        self.__initLists()
         while True:
             self.__printMenu()
             command = input(">>>")
